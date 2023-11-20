@@ -19,8 +19,8 @@ contract DeployNFTs is Script {
 
         vm.startBroadcast(vm.envUint("PRIVATE_KEY"));
 
-        address mockUsdcAddr = address(0xAB9Ad499c25204E7E4D302f1b5435cB7B9B73078);
-        address exdAddr = address(0xB4473931D8d1A7d1BCD3eDF384e53f6B2eD0542f);
+        address mockUsdcAddr = address(0x13D0A4EBeAfCaFB6C84AE35753C04FBF3Eb3663F);
+        address exdAddr = address(0xaf2aa7917250689Df2692d3249d94292F30491F8);
 
         guardiansAddr = _deployGuardians();
         chestAddr = _deployChest(exdAddr, mockUsdcAddr, guardiansAddr);

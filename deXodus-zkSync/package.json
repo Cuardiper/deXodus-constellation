@@ -1,0 +1,47 @@
+{
+  "name": "zksync-hardhat-template",
+  "description": "A template for zkSync smart contracts development with Hardhat",
+  "private": true,
+  "author": "Matter Labs",
+  "license": "MIT",
+  "repository": "https://github.com/matter-labs/zksync-hardhat-template.git",
+  "scripts": {
+    "deploy": "hardhat deploy-zksync --script deploy.ts",
+    "interact": "hardhat deploy-zksync --script interact.ts",
+    "compile": "hardhat compile",
+    "clean": "hardhat clean",
+    "test": "hardhat test --network hardhat"
+  },
+  "devDependencies": {
+    "@api3/airnode-protocol": "^0.13.0",
+    "@api3/airnode-protocol-v1": "^2.10.0",
+    "@api3/contracts": "^0.12.0",
+    "@chainlink/contracts": "^0.8.0",
+    "@matterlabs/hardhat-zksync-deploy": "^0.6.5",
+    "@matterlabs/hardhat-zksync-node": "^0.0.1-beta.6",
+    "@matterlabs/hardhat-zksync-solc": "^0.4.2",
+    "@matterlabs/hardhat-zksync-verify": "^0.2.1",
+    "@matterlabs/zksync-contracts": "^0.6.1",
+    "@nomiclabs/hardhat-etherscan": "^3.1.7",
+    "@openzeppelin/contracts": "4.9.3",
+    "@openzeppelin/contracts-upgradeable": "4.8.3",
+    "@types/chai": "^4.3.4",
+    "@types/mocha": "^10.0.1",
+    "@uniswap/v3-core": "^1.0.1",
+    "@uniswap/v3-periphery": "^1.4.4",
+    "chai": "^4.3.7",
+    "chainlink": "^0.8.2",
+    "dotenv": "^16.0.3",
+    "ethers": "5.7.2",
+    "hardhat": "^2.12.4",
+    "mocha": "^10.2.0",
+    "root": "^3.2.0",
+    "ts-node": "^10.9.1",
+    "typescript": "^4.9.4",
+    "zksync-web3": "^0.14.3"
+  },
+  "dependencies": {
+    "@openzeppelin/hardhat-upgrades": "^2.4.1",
+    "hardhat-ethers": "^1.0.1"
+  }
+}

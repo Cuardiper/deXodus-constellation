@@ -50,8 +50,8 @@ contract HelperConfig is Script {
         returns (NetworkConfig memory arbitrumGoerliNetworkConfig)
     {
         arbitrumGoerliNetworkConfig = NetworkConfig({
-            weth: 0xb16F35c0Ae2912430DAc15764477E179D9B9EbEa,
-            wbtc: 0xFF82bB6DB46Ad45F017e2Dfb478102C7671B13b3,
+            weth: 0x7b79995e5f793A07Bc00c21412e50Ecae098E7f9,
+            wbtc: 0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599,
             wethUsdPriceFeed: 0x694AA1769357215DE4FAC081bf1f309aDC325306, // ETH / USD
             wbtcUsdPriceFeed: 0x1b44F3514812d835EB1BDB0acB33d3fA3351Ee43,
             deployerKey: vm.envUint("PRIVATE_KEY")

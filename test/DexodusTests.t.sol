@@ -250,7 +250,7 @@ contract FuturesTest is Test {
     #################################    CORE    #################################
     ############################################################################*/
 
-    function testProfitPredatorsCore() public {
+    function testGuardiansCore() public {
         logLiqPrBlance(liqPr1, "LIQPR1");
         logLiqPrBlance(liqPr2, "LIQPR2");
         logLiqPrBlance(liqPr3, "LIQPR3");

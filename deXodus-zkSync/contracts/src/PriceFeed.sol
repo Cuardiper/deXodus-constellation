@@ -76,12 +76,13 @@ contract PriceFeed is UUPSUpgradeable, Ownable2StepUpgradeable {
         }
 
         if (id == 280) { // zkSync testnet
-            if (_futureId == 1) {
-                currentPrice = readDataFeedFromApi3(address(0xe5Cf15fED24942E656dBF75165aF1851C89F21B5));
-            } else {
-                currentPrice = readDataFeedFromApi3(address(0x26690F9f17FdC26D419371315bc17950a0FC90eD));
-            }
-            currentPrice = currentPrice * 1e6 / 1e18;
+            return true;
+            // if (_futureId == 1) {
+            //     currentPrice = readDataFeedFromApi3(address(0xe5Cf15fED24942E656dBF75165aF1851C89F21B5));
+            // } else {
+            //     currentPrice = readDataFeedFromApi3(address(0x26690F9f17FdC26D419371315bc17950a0FC90eD));
+            // }
+            // currentPrice = currentPrice * 1e6 / 1e18;
         } else {
             if (_futureId == 1) {
                 currentPrice = getUsdPriceFromChainlink(wbtc);
