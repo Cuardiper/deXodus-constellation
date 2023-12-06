@@ -5,12 +5,14 @@ import {
   RainbowKitProvider,
   darkTheme,
 } from "@rainbow-me/rainbowkit";
+import { Analytics } from "@vercel/analytics/react";
 import { WagmiConfig, createConfig, configureChains } from "wagmi";
-import { sepolia, mainnet, zkSyncTestnet } from "wagmi/chains";
+import { mainnet, zkSyncTestnet, arbitrumSepolia } from "wagmi/chains";
 import { ChakraProvider } from "@chakra-ui/react";
 import { PriceProvider } from "@/context/priceContext";
 import { MarketProvider } from "@/context/marketContext";
 import { DeploymentProvider } from "@/context/deploymentContext";
+import { DatafeedProvider } from "@/context/datafeedContext";
 import { alchemyProvider } from "wagmi/providers/alchemy";
 import { infuraProvider } from "wagmi/providers/infura";
 import { Hind_Siliguri } from "next/font/google";
@@ -23,7 +25,7 @@ const font = Hind_Siliguri({
 });
 
 const { chains, publicClient } = configureChains(
-  [sepolia, mainnet, zkSyncTestnet],
+  [mainnet, arbitrumSepolia],
   [
     alchemyProvider({
       apiKey: process.env.NEXT_PUBLIC_ALCHEMY_API_KEY,
@@ -31,10 +33,20 @@ const { chains, publicClient } = configureChains(
     infuraProvider({ apiKey: process.env.NEXT_PUBLIC_INFURA_API_KEY }),
     jsonRpcProvider({
       rpc: () => ({
-        http: "https://zksync2-testnet.zksync.dev",
+        http: "https://arb-sepolia.g.alchemy.com/v2/7HiVVUF-Kif1okMoyCSfVDsoAaLhwPEm",
       }),
     }),
-  ] //ToDO: API KEY EXPOSED!??
+    jsonRpcProvider({
+      rpc: () => ({
+        http: "https://arbitrum-sepolia.infura.io/v3/732360c465154c0ba93cf47fc07390db",
+      }),
+    }),
+    /*jsonRpcProvider({
+      rpc: () => ({
+        http: "https://zksync2-testnet.zksync.dev",
+      }),
+    }),*/
+  ]
 );
 
 const chainsForWallet = chains.filter((chain) => chain.id !== 1); //WE DONT WANT TO SHOW MAINNET IN THE WALLET (we need it for 1InchSpotAggregatorPrice)
@@ -64,11 +76,14 @@ export default function App({ Component, pageProps }) {
         >
           <ChakraProvider>
             <DeploymentProvider>
-              <PriceProvider>
-                <MarketProvider>
-                  {getLayout(<Component {...pageProps} />)}
-                </MarketProvider>
-              </PriceProvider>
+              <DatafeedProvider>
+                <PriceProvider>
+                  <MarketProvider>
+                    {getLayout(<Component {...pageProps} />)}
+                    <Analytics />
+                  </MarketProvider>
+                </PriceProvider>
+              </DatafeedProvider>
             </DeploymentProvider>
           </ChakraProvider>
         </RainbowKitProvider>

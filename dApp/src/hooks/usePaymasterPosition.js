@@ -2,7 +2,7 @@ import { Contract, utils } from "zksync-web3";
 import * as ethers from "ethers";
 import { floatToBigInt } from "@/lib/bigIntegers";
 
-const usePaymaster = async ({
+const getPaymasterParams = async ({
   FuturesInstance,
   marketId,
   size,
@@ -23,7 +23,7 @@ const usePaymaster = async ({
     type: "General",
     innerInput: new Uint8Array(), //ToDoo quitar!?!!?
   });
-  console.log("checkpoint 1");
+
   // estimate gasLimit via paymaster
   const gasLimit = await FuturesInstance.estimateGas.increasePosition(
     marketId,
@@ -39,7 +39,7 @@ const usePaymaster = async ({
       },
     }
   );
-  console.log("checkpoint 2");
+
   return {
     maxFeePerGas: gasPrice,
     maxPriorityFeePerGas: ethers.BigNumber.from(0),
@@ -51,4 +51,4 @@ const usePaymaster = async ({
   };
 };
 
-export default usePaymaster;
+export default getPaymasterParams;

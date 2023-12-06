@@ -16,7 +16,6 @@ export async function buyChest(chestAddress) {
   const { hash } = await writeContract(config);
 
   const data = await waitForTransaction({ hash });
-  console.log("buy finished", data);
   return data;
 }
 

@@ -1,6 +1,37 @@
 export const FuturesABI = [
   {
-    inputs: [],
+    inputs: [
+      {
+        internalType: "address",
+        name: "_liquidityPool",
+        type: "address",
+      },
+      {
+        internalType: "address",
+        name: "_priceFeed",
+        type: "address",
+      },
+      {
+        internalType: "address",
+        name: "_usdc",
+        type: "address",
+      },
+      {
+        internalType: "address",
+        name: "_weth",
+        type: "address",
+      },
+      {
+        internalType: "address",
+        name: "_wbtc",
+        type: "address",
+      },
+      {
+        internalType: "uint256",
+        name: "_liquidationThreshold",
+        type: "uint256",
+      },
+    ],
     stateMutability: "nonpayable",
     type: "constructor",
   },
@@ -15,36 +46,35 @@ export const FuturesABI = [
     type: "error",
   },
   {
-    anonymous: false,
     inputs: [
       {
-        indexed: false,
-        internalType: "address",
-        name: "previousAdmin",
-        type: "address",
+        internalType: "string",
+        name: "feedParamKey",
+        type: "string",
       },
       {
-        indexed: false,
-        internalType: "address",
-        name: "newAdmin",
-        type: "address",
+        internalType: "string[]",
+        name: "feeds",
+        type: "string[]",
       },
-    ],
-    name: "AdminChanged",
-    type: "event",
-  },
-  {
-    anonymous: false,
-    inputs: [
       {
-        indexed: true,
-        internalType: "address",
-        name: "beacon",
-        type: "address",
+        internalType: "string",
+        name: "timeParamKey",
+        type: "string",
+      },
+      {
+        internalType: "uint256",
+        name: "time",
+        type: "uint256",
+      },
+      {
+        internalType: "bytes",
+        name: "extraData",
+        type: "bytes",
       },
     ],
-    name: "BeaconUpgraded",
-    type: "event",
+    name: "StreamsLookup",
+    type: "error",
   },
   {
     anonymous: false,
@@ -111,6 +141,92 @@ export const FuturesABI = [
       },
     ],
     name: "ClosePosition",
+    type: "event",
+  },
+  {
+    anonymous: false,
+    inputs: [
+      {
+        indexed: true,
+        internalType: "uint256",
+        name: "futureId",
+        type: "uint256",
+      },
+      {
+        indexed: false,
+        internalType: "string",
+        name: "market",
+        type: "string",
+      },
+    ],
+    name: "CreateFuture",
+    type: "event",
+  },
+  {
+    anonymous: false,
+    inputs: [
+      {
+        indexed: true,
+        internalType: "uint256",
+        name: "marketId",
+        type: "uint256",
+      },
+      {
+        indexed: true,
+        internalType: "uint256",
+        name: "positionId",
+        type: "uint256",
+      },
+      {
+        indexed: true,
+        internalType: "address",
+        name: "trader",
+        type: "address",
+      },
+      {
+        indexed: false,
+        internalType: "uint256",
+        name: "startedAt",
+        type: "uint256",
+      },
+      {
+        indexed: false,
+        internalType: "uint256",
+        name: "size",
+        type: "uint256",
+      },
+      {
+        indexed: false,
+        internalType: "uint256",
+        name: "collateral",
+        type: "uint256",
+      },
+      {
+        indexed: false,
+        internalType: "uint256",
+        name: "entryPrice",
+        type: "uint256",
+      },
+      {
+        indexed: false,
+        internalType: "uint256",
+        name: "liqPrice",
+        type: "uint256",
+      },
+      {
+        indexed: false,
+        internalType: "bool",
+        name: "long",
+        type: "bool",
+      },
+      {
+        indexed: false,
+        internalType: "uint256",
+        name: "currentPrice",
+        type: "uint256",
+      },
+    ],
+    name: "DecreaseCollateral",
     type: "event",
   },
   {
@@ -244,6 +360,73 @@ export const FuturesABI = [
         type: "uint256",
       },
     ],
+    name: "IncreaseCollateral",
+    type: "event",
+  },
+  {
+    anonymous: false,
+    inputs: [
+      {
+        indexed: true,
+        internalType: "uint256",
+        name: "marketId",
+        type: "uint256",
+      },
+      {
+        indexed: true,
+        internalType: "uint256",
+        name: "positionId",
+        type: "uint256",
+      },
+      {
+        indexed: true,
+        internalType: "address",
+        name: "trader",
+        type: "address",
+      },
+      {
+        indexed: false,
+        internalType: "uint256",
+        name: "startedAt",
+        type: "uint256",
+      },
+      {
+        indexed: false,
+        internalType: "uint256",
+        name: "size",
+        type: "uint256",
+      },
+      {
+        indexed: false,
+        internalType: "uint256",
+        name: "collateral",
+        type: "uint256",
+      },
+      {
+        indexed: false,
+        internalType: "uint256",
+        name: "entryPrice",
+        type: "uint256",
+      },
+      {
+        indexed: false,
+        internalType: "uint256",
+        name: "liqPrice",
+        type: "uint256",
+      },
+      {
+        indexed: false,
+        internalType: "bool",
+        name: "long",
+        type: "bool",
+      },
+      {
+        indexed: false,
+        internalType: "uint256",
+        name: "currentPrice",
+        type: "uint256",
+      },
+    ],
     name: "IncreasePosition",
     type: "event",
   },
@@ -252,12 +435,48 @@ export const FuturesABI = [
     inputs: [
       {
         indexed: false,
-        internalType: "uint8",
-        name: "version",
-        type: "uint8",
+        internalType: "address",
+        name: "msgSender",
+        type: "address",
+      },
+      {
+        indexed: false,
+        internalType: "uint256",
+        name: "futureId",
+        type: "uint256",
+      },
+      {
+        indexed: false,
+        internalType: "uint256",
+        name: "size",
+        type: "uint256",
+      },
+      {
+        indexed: false,
+        internalType: "uint256",
+        name: "collateral",
+        type: "uint256",
+      },
+      {
+        indexed: false,
+        internalType: "bool",
+        name: "long",
+        type: "bool",
+      },
+      {
+        indexed: false,
+        internalType: "uint256",
+        name: "txType",
+        type: "uint256",
+      },
+      {
+        indexed: false,
+        internalType: "string",
+        name: "feedId",
+        type: "string",
       },
     ],
-    name: "Initialized",
+    name: "InitiateTrade",
     type: "event",
   },
   {
@@ -400,59 +619,50 @@ export const FuturesABI = [
       {
         indexed: true,
         internalType: "address",
-        name: "previousOwner",
+        name: "trader",
         type: "address",
       },
       {
-        indexed: true,
-        internalType: "address",
-        name: "newOwner",
-        type: "address",
+        indexed: false,
+        internalType: "uint256",
+        name: "price",
+        type: "uint256",
       },
     ],
-    name: "OwnershipTransferStarted",
+    name: "PriceUpdate",
     type: "event",
   },
   {
     anonymous: false,
     inputs: [
       {
-        indexed: true,
+        indexed: false,
         internalType: "address",
-        name: "previousOwner",
+        name: "oldGovernance",
         type: "address",
       },
       {
-        indexed: true,
+        indexed: false,
         internalType: "address",
-        name: "newOwner",
+        name: "newGovernance",
         type: "address",
       },
     ],
-    name: "OwnershipTransferred",
+    name: "UpdatedGovernance",
     type: "event",
   },
   {
-    anonymous: false,
-    inputs: [
-      {
-        indexed: true,
-        internalType: "address",
-        name: "implementation",
-        type: "address",
-      },
-    ],
-    name: "Upgraded",
-    type: "event",
+    stateMutability: "payable",
+    type: "fallback",
   },
   {
     inputs: [],
-    name: "BASIS_POINTS",
+    name: "FEE_ADDRESS",
     outputs: [
       {
-        internalType: "uint256",
+        internalType: "address",
         name: "",
-        type: "uint256",
+        type: "address",
       },
     ],
     stateMutability: "view",
@@ -526,6 +736,45 @@ export const FuturesABI = [
   },
   {
     inputs: [],
+    name: "PERCENTAGE",
+    outputs: [
+      {
+        internalType: "uint256",
+        name: "",
+        type: "uint256",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [],
+    name: "STRING_DATASTREAMS_FEEDLABEL",
+    outputs: [
+      {
+        internalType: "string",
+        name: "",
+        type: "string",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [],
+    name: "STRING_DATASTREAMS_QUERYLABEL",
+    outputs: [
+      {
+        internalType: "string",
+        name: "",
+        type: "string",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [],
     name: "USDC",
     outputs: [
       {
@@ -539,9 +788,15 @@ export const FuturesABI = [
   },
   {
     inputs: [],
-    name: "acceptOwnership",
-    outputs: [],
-    stateMutability: "nonpayable",
+    name: "borrowingFee",
+    outputs: [
+      {
+        internalType: "uint256",
+        name: "",
+        type: "uint256",
+      },
+    ],
+    stateMutability: "view",
     type: "function",
   },
   {
@@ -606,6 +861,106 @@ export const FuturesABI = [
     type: "function",
   },
   {
+    inputs: [
+      {
+        internalType: "bytes[]",
+        name: "values",
+        type: "bytes[]",
+      },
+      {
+        internalType: "bytes",
+        name: "extraData",
+        type: "bytes",
+      },
+    ],
+    name: "checkCallback",
+    outputs: [
+      {
+        internalType: "bool",
+        name: "",
+        type: "bool",
+      },
+      {
+        internalType: "bytes",
+        name: "",
+        type: "bytes",
+      },
+    ],
+    stateMutability: "pure",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
+        components: [
+          {
+            internalType: "uint256",
+            name: "index",
+            type: "uint256",
+          },
+          {
+            internalType: "uint256",
+            name: "timestamp",
+            type: "uint256",
+          },
+          {
+            internalType: "bytes32",
+            name: "txHash",
+            type: "bytes32",
+          },
+          {
+            internalType: "uint256",
+            name: "blockNumber",
+            type: "uint256",
+          },
+          {
+            internalType: "bytes32",
+            name: "blockHash",
+            type: "bytes32",
+          },
+          {
+            internalType: "address",
+            name: "source",
+            type: "address",
+          },
+          {
+            internalType: "bytes32[]",
+            name: "topics",
+            type: "bytes32[]",
+          },
+          {
+            internalType: "bytes",
+            name: "data",
+            type: "bytes",
+          },
+        ],
+        internalType: "struct Log",
+        name: "log",
+        type: "tuple",
+      },
+      {
+        internalType: "bytes",
+        name: "",
+        type: "bytes",
+      },
+    ],
+    name: "checkLog",
+    outputs: [
+      {
+        internalType: "bool",
+        name: "upkeepNeeded",
+        type: "bool",
+      },
+      {
+        internalType: "bytes",
+        name: "performData",
+        type: "bytes",
+      },
+    ],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
     inputs: [],
     name: "counter",
     outputs: [
@@ -644,24 +999,92 @@ export const FuturesABI = [
         type: "uint256",
       },
       {
+        internalType: "bool",
+        name: "_long",
+        type: "bool",
+      },
+      {
+        internalType: "string",
+        name: "feedId",
+        type: "string",
+      },
+    ],
+    name: "decreaseCollateral",
+    outputs: [],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
         internalType: "uint256",
-        name: "_currentPrice",
+        name: "_futureId",
         type: "uint256",
       },
       {
-        internalType: "bool",
-        name: "_keepLeverageRatio",
-        type: "bool",
+        internalType: "uint256",
+        name: "_percentageDecrease",
+        type: "uint256",
       },
       {
         internalType: "bool",
         name: "_long",
         type: "bool",
       },
+      {
+        internalType: "string",
+        name: "feedId",
+        type: "string",
+      },
     ],
     name: "decreasePosition",
     outputs: [],
     stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    inputs: [],
+    name: "executionFee",
+    outputs: [
+      {
+        internalType: "uint256",
+        name: "",
+        type: "uint256",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
+        internalType: "uint256",
+        name: "",
+        type: "uint256",
+      },
+    ],
+    name: "feedIds",
+    outputs: [
+      {
+        internalType: "string",
+        name: "",
+        type: "string",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [],
+    name: "fundingFee",
+    outputs: [
+      {
+        internalType: "uint256",
+        name: "",
+        type: "uint256",
+      },
+    ],
+    stateMutability: "view",
     type: "function",
   },
   {
@@ -762,6 +1185,47 @@ export const FuturesABI = [
     type: "function",
   },
   {
+    inputs: [],
+    name: "governance",
+    outputs: [
+      {
+        internalType: "address",
+        name: "",
+        type: "address",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
+        internalType: "uint256",
+        name: "_futureId",
+        type: "uint256",
+      },
+      {
+        internalType: "uint256",
+        name: "_collateral",
+        type: "uint256",
+      },
+      {
+        internalType: "bool",
+        name: "_long",
+        type: "bool",
+      },
+      {
+        internalType: "string",
+        name: "feedId",
+        type: "string",
+      },
+    ],
+    name: "increaseCollateral",
+    outputs: [],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
     inputs: [
       {
         internalType: "uint256",
@@ -779,55 +1243,17 @@ export const FuturesABI = [
         type: "uint256",
       },
       {
-        internalType: "uint256",
-        name: "_currentPrice",
-        type: "uint256",
-      },
-      {
         internalType: "bool",
         name: "_long",
         type: "bool",
       },
+      {
+        internalType: "string",
+        name: "feedId",
+        type: "string",
+      },
     ],
     name: "increasePosition",
-    outputs: [],
-    stateMutability: "nonpayable",
-    type: "function",
-  },
-  {
-    inputs: [
-      {
-        internalType: "address",
-        name: "_liquidityPool",
-        type: "address",
-      },
-      {
-        internalType: "address",
-        name: "_priceFeed",
-        type: "address",
-      },
-      {
-        internalType: "address",
-        name: "_usdc",
-        type: "address",
-      },
-      {
-        internalType: "address",
-        name: "_weth",
-        type: "address",
-      },
-      {
-        internalType: "address",
-        name: "_wbtc",
-        type: "address",
-      },
-      {
-        internalType: "uint256",
-        name: "_liquidationThreshold",
-        type: "uint256",
-      },
-    ],
-    name: "initialize",
     outputs: [],
     stateMutability: "nonpayable",
     type: "function",
@@ -942,28 +1368,28 @@ export const FuturesABI = [
   },
   {
     inputs: [],
-    name: "owner",
+    name: "makerTradingFee",
     outputs: [
       {
-        internalType: "address",
+        internalType: "uint256",
         name: "",
-        type: "address",
+        type: "uint256",
       },
     ],
     stateMutability: "view",
     type: "function",
   },
   {
-    inputs: [],
-    name: "pendingOwner",
-    outputs: [
+    inputs: [
       {
-        internalType: "address",
-        name: "",
-        type: "address",
+        internalType: "bytes",
+        name: "performData",
+        type: "bytes",
       },
     ],
-    stateMutability: "view",
+    name: "performUpkeep",
+    outputs: [],
+    stateMutability: "nonpayable",
     type: "function",
   },
   {
@@ -1028,20 +1454,96 @@ export const FuturesABI = [
   },
   {
     inputs: [],
-    name: "proxiableUUID",
+    name: "priceImpactFee",
     outputs: [
       {
-        internalType: "bytes32",
+        internalType: "uint256",
         name: "",
-        type: "bytes32",
+        type: "uint256",
       },
     ],
     stateMutability: "view",
     type: "function",
   },
   {
-    inputs: [],
-    name: "renounceOwnership",
+    inputs: [
+      {
+        internalType: "address",
+        name: "_newGovernance",
+        type: "address",
+      },
+    ],
+    name: "setGovernance",
+    outputs: [],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
+        internalType: "uint256",
+        name: "_makerFee",
+        type: "uint256",
+      },
+      {
+        internalType: "uint256",
+        name: "_takerFee",
+        type: "uint256",
+      },
+    ],
+    name: "setTradingFees",
+    outputs: [],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
+        internalType: "uint256",
+        name: "_borrowingFee",
+        type: "uint256",
+      },
+    ],
+    name: "setborrowingFee",
+    outputs: [],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
+        internalType: "uint256",
+        name: "_executionFee",
+        type: "uint256",
+      },
+    ],
+    name: "setexecutionFee",
+    outputs: [],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
+        internalType: "uint256",
+        name: "_fundingFee",
+        type: "uint256",
+      },
+    ],
+    name: "setfundingFee",
+    outputs: [],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
+        internalType: "uint256",
+        name: "_priceImpactFee",
+        type: "uint256",
+      },
+    ],
+    name: "setpriceImpactFee",
     outputs: [],
     stateMutability: "nonpayable",
     type: "function",
@@ -1106,47 +1608,16 @@ export const FuturesABI = [
     type: "function",
   },
   {
-    inputs: [
+    inputs: [],
+    name: "takerTradingFee",
+    outputs: [
       {
-        internalType: "address",
-        name: "newOwner",
-        type: "address",
+        internalType: "uint256",
+        name: "",
+        type: "uint256",
       },
     ],
-    name: "transferOwnership",
-    outputs: [],
-    stateMutability: "nonpayable",
-    type: "function",
-  },
-  {
-    inputs: [
-      {
-        internalType: "address",
-        name: "newImplementation",
-        type: "address",
-      },
-    ],
-    name: "upgradeTo",
-    outputs: [],
-    stateMutability: "nonpayable",
-    type: "function",
-  },
-  {
-    inputs: [
-      {
-        internalType: "address",
-        name: "newImplementation",
-        type: "address",
-      },
-      {
-        internalType: "bytes",
-        name: "data",
-        type: "bytes",
-      },
-    ],
-    name: "upgradeToAndCall",
-    outputs: [],
-    stateMutability: "payable",
+    stateMutability: "view",
     type: "function",
   },
   {
@@ -1170,15 +1641,15 @@ export const FuturesABI = [
   },
   {
     inputs: [],
-    name: "version",
+    name: "verifier",
     outputs: [
       {
-        internalType: "uint256",
+        internalType: "contract IVerifierProxy",
         name: "",
-        type: "uint256",
+        type: "address",
       },
     ],
-    stateMutability: "pure",
+    stateMutability: "view",
     type: "function",
   },
   {

@@ -27,7 +27,7 @@ export const NFTCollectionV2 = ({ onItemClick, selectedItems = [] }) => {
   useEffect(() => {
     const fetchNFTsData = async (data) => {
       data = data.filter((nftID) => nftID < 199);
-      console.log("data", data);
+      
       let nftsData = [];
       data.forEach(async (nftID) => {
         nftID = nftID;
@@ -53,16 +53,19 @@ export const NFTCollectionV2 = ({ onItemClick, selectedItems = [] }) => {
     }
   }, [data, address]);
 
-  return (
-    nftsData.length > 0 && (
-      <BasicGrid
-        width="1000"
-        height="1000"
-        data={nftsData}
-        isLoading={isLoading}
-        onItemClick={onItemClick}
-        selectedItems={selectedItems}
-      />
-    )
+  return nftsData.length > 0 ? (
+    <BasicGrid
+      width="1000"
+      height="1000"
+      data={nftsData}
+      isLoading={isLoading}
+      onItemClick={onItemClick}
+      selectedItems={selectedItems}
+    />
+  ) : (
+    <div className="flex flex-col items-center w-full h-full border border-gray-800 mt-4 bg-[#0d1116] p-4 rounded-lg">
+      <p className="text-xl font-bold text-white">No NFTs Found</p>
+      <p className="text-lg text-white">You don&apos;t have any guardians. yet</p>
+    </div>
   );
 };

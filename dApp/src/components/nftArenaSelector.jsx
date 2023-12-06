@@ -75,7 +75,7 @@ export const NftArenaSelector = () => {
           </DrawerHeader>
           <DrawerBody className="bg-gray-900 text-white">
             <p className="text-gray-200 mt-2 font-semibold">
-              Select the creature that will participate in the trade
+              Select the guardian that will participate in the trade
             </p>
             <NFTCollectionV2
               onItemClick={handleNftClick}

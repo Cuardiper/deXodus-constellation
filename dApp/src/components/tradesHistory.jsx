@@ -43,7 +43,7 @@ export const TradesHistory = () => {
     execute(PositionsSummaryDocument, {
       traderAddress: address,
     }).then((result) => {
-      console.log("subgraph result", result);
+      
       if (!result.data) return;
       setData(result.data.positions);
     });

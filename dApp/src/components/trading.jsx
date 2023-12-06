@@ -17,13 +17,13 @@ import {
   DrawerCloseButton,
   useDisclosure,
   Button,
-  Center,
 } from "@chakra-ui/react";
 import { useMarket } from "@/context/marketContext";
 import { CryptoIcon } from "./cryptoIcon";
 import { NftArenaSelector } from "./nftArenaSelector";
 import { useDeployment } from "@/context/deploymentContext";
 import { OpenPositionPaymasterButton } from "./openPositionPaymasterButton";
+import { OpenPositionButtonV2 } from "./tradingComponents/openPositionButtonV2";
 
 export const Trading = ({ type = "long" }) => {
   const { address, isConnected } = useAccount();
@@ -168,8 +168,8 @@ export const Trading = ({ type = "long" }) => {
         <div className="w-fit mx-auto mt-14">
           {isMounted &&
             (isConnected ? (
-              chain.id == "11155111" ? (
-                <OpenPositionButton
+              chain.id == "421614" ? (
+                <OpenPositionButtonV2
                   collateral={collateralValue}
                   leverage={leverageValue}
                   type={type}
@@ -202,10 +202,10 @@ export const Trading = ({ type = "long" }) => {
             <Button
               variant="outline"
               colorScheme="whiteAlpha"
-              className="w-full mb-2"
+              className="w-full mb-2 cursor-not-allowed"
               onClick={() => {
-                setMarketData(1);
-                onClose();
+                //setMarketData(1);
+                //onClose();
               }}
             >
               <Image

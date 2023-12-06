@@ -1,6 +1,5 @@
 import { ContentCover } from "@/components/contentCover";
 import { Spinner } from "@chakra-ui/react";
-import Image from "next/image";
 
 export default function BasicGrid({
   data,
@@ -40,7 +39,7 @@ export default function BasicGrid({
             <ContentCover
               key={item.id}
               id={item.id}
-              image={item.image || "/images/Logomark-Blue.png"}
+              image={item.image || "/images/dexLogo_fit.png"}
               isLast={index === page * itemsPerPage - 1}
               newLimit={() => setPage(page + 1)}
               width={width}

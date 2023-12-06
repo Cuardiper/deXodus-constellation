@@ -2,7 +2,21 @@
 const nextConfig = {
   reactStrictMode: true,
   images: {
-    unoptimized: true,
+    domains: ["ipfs.io"],
+  },
+  //config for Biconomy?
+  webpack: (config, { isServer }) => {
+    if (!isServer) {
+      config.resolve.fallback = {
+        fs: false,
+        net: false,
+        tls: false,
+      };
+    }
+    return config;
+  },
+  eslint: {
+    ignoreDuringBuilds: true,
   },
 };
 

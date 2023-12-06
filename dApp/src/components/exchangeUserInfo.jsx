@@ -13,12 +13,14 @@ import {
 import { Tabs, TabList, TabPanels, Tab, TabPanel } from "@chakra-ui/react";
 import { useDisclosure } from "@chakra-ui/react";
 import { ClosePositionModal } from "./closePositionModal";
+import { EditCollateralModal } from "./editCollateralModal";
 import { Button } from "@chakra-ui/react";
 import { useUserOpenedPositions } from "@/hooks/useUserOpenedPositions";
 import { useEffect, useState } from "react";
 import { useMarket } from "@/context/marketContext";
 import { CryptoIcon } from "./cryptoIcon";
 import { Menu, MenuButton, MenuList, MenuItem } from "@chakra-ui/react";
+import { EditIcon, StarIcon } from "@chakra-ui/icons";
 import { TradesHistory } from "./tradesHistory";
 
 export const ExchangeUserInfo = () => {
@@ -30,7 +32,11 @@ export const ExchangeUserInfo = () => {
     onClose: onCloseClosePositionModal,
     onOpen: onOpenClosePositionModal,
   } = useDisclosure();
-
+  const {
+    isOpen: isOpenEditCollateralModal,
+    onClose: onCloseEditCollateralModal,
+    onOpen: onOpenEditCollateralModal,
+  } = useDisclosure();
   const { position, isLoading: isLoadingPosition } =
     useUserOpenedPositions(market);
   const [myPosition, setMyPosition] = useState([]);
@@ -52,7 +58,7 @@ export const ExchangeUserInfo = () => {
     } else if (!isLoadingPosition) {
       setMyPosition([]);
     }
-  }, [position, isLoadingPosition]);
+  }, [market, position, isLoadingPosition]);
 
   const calculateNetValue = (position) => {
     return position.collateral + calculatePnL(position);
@@ -218,6 +224,21 @@ export const ExchangeUserInfo = () => {
                           <Td isNumeric>
                             <Menu>
                               <MenuButton>&hellip;</MenuButton>
+                              <MenuList bg="#202a36" border="0px">
+                                <MenuItem
+                                  icon={<EditIcon />}
+                                  bg="#202a36"
+                                  onClick={onOpenEditCollateralModal}
+                                >
+                                  <EditCollateralModal
+                                    isOpen={isOpenEditCollateralModal}
+                                    onClose={onCloseEditCollateralModal}
+                                    position={position}
+                                    marketPrice={price}
+                                  />
+                                  Edit collateral
+                                </MenuItem>
+                              </MenuList>
                             </Menu>
                           </Td>
                         </Tr>

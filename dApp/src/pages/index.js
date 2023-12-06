@@ -16,16 +16,18 @@ export default function Home() {
     <div>
       <Head>
         <title>
-          deXodus |{" "}
+          DeXodus |{" "}
           {price
-            ? Number(price).toLocaleString("en", {
-                minimumFractionDigits: 2,
-                maximumFractionDigits: 2,
-              })
+            ? "$" + Number(price)
+                .toLocaleString("en", {
+                  minimumFractionDigits: 2,
+                  maximumFractionDigits: 2,
+                })
+                .toString() + (market == 1 ? " - BTC-USDC" : " ETH-USDC")
             : ""}
         </title>
         <meta name="description" content="ETH Istanbul project" />
-        <link rel="icon" href="/images/favicon/bull-icon-32.png" />
+        <link rel="icon" href="/images/dexLogo_fit.png" />
       </Head>
       <div className="container mx-auto py-10">
         <div className="flex flex-col lg:flex-row lg:space-x-6">
@@ -41,8 +43,8 @@ export default function Home() {
               <ExchangeUserInfo />
             </div>
           </div>
-          <div id="right" className="grid gird-cols-1">
-            <div className="w-96 grid relative">
+          <div id="right" className="mx-auto grid gird-cols-1">
+            <div className="w-full sm:w-96 grid relative">
               <div className="w-full max-w-md p-2 bg-black/60 rounded-xl">
                 <Tabs isFitted variant="solid-rounded" colorScheme="pink">
                   <TabList className="space-x-1 rounded-full bg-gray-900">

@@ -4,7 +4,7 @@ import { useToast } from "@chakra-ui/react";
 import { useAccount } from "wagmi";
 import { useDeployment } from "@/context/deploymentContext";
 import { Web3Provider, Signer, Contract } from "zksync-web3";
-import usePaymaster from "@/hooks/usePaymasterPosition";
+import getPaymasterParams from "@/hooks/usePaymasterPosition";
 import { FuturesABI } from "../../smartContracts/futures";
 import { ethers } from "ethers";
 import { useErc20Allowance } from "@/hooks/useErc20Allowance";
@@ -39,7 +39,7 @@ export const OpenPositionPaymasterButton = ({ collateral, leverage }) => {
       let price = ethers.utils.formatEther(gasPrice.toString());
 
       let txHandle;
-      const params = await usePaymaster({
+      const params = await getPaymasterParams({
         FuturesInstance: futuresContract,
         marketId: marketId,
         size: size,

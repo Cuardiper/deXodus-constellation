@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { useAccount } from "wagmi";
 import { useContractRead } from "wagmi";
 import { useDeployment } from "@/context/deploymentContext";
@@ -9,13 +9,13 @@ import { openChest, buyChest } from "@/lib/smartContracts/chest";
 import { approve } from "@/lib/smartContracts/erc20Functions";
 import { useErc20Allowance } from "@/hooks/useErc20Allowance";
 import { claimNfts } from "@/lib/smartContracts/chest";
+import { Badge } from "@chakra-ui/react";
 
 export const Chests = ({}) => {
   const { address } = useAccount();
   const { deployment } = useDeployment();
   const [isLoadingBuy, setIsLoadingBuy] = useState(false);
   const [isLoadingOpen, setIsLoadingOpen] = useState(false);
-  const [isLoadingClaim, setIsLoadingClaim] = useState(false);
 
   const { balance: allowanceUSDC } = useErc20Allowance(
     deployment.usdc,
@@ -27,16 +27,13 @@ export const Chests = ({}) => {
     deployment.chest
   );
 
-  const { data } = useContractRead({
+  const { data: nChests } = useContractRead({
     address: deployment.chest,
     abi: chestABI,
     functionName: "balanceOf",
     args: [address, 1],
     watch: true,
   });
-  console.log("chests", data);
-
-  useEffect(() => {}, [data]);
 
   const handleBuy = async () => {
     try {
@@ -71,68 +68,49 @@ export const Chests = ({}) => {
     }
   };
 
-  const handleClaim = async () => {
-    try {
-      setIsLoadingClaim(true);
-      await claimNfts(deployment.chest);
-      setIsLoadingClaim(false);
-    } catch (e) {
-      console.log(e);
-      setIsLoadingClaim(false);
-    }
-  };
-
   return (
-    <div className="flex items-center">
-      <div className="-ml-6">
+    <div
+      style={{
+        gridTemplateColumns: `repeat(auto-fill, minmax(min(100%/2, max(350px, 100%/${5})), 1fr))`,
+      }}
+      className="grid gap-4 py-8 lg:py-10 h-full"
+    >
+      <div className="flex flex-col justify-center items-center border border-neutral-800 rounded-lg p-4 bg-[#0d1116]">
         <Image
           src="/images/chest.png"
           alt="Chests"
           width={928}
           height={928}
-          className="w-60 h-auto"
+          className="w-48 h-auto"
         />
-        <div className="flex justify-center items-center -mt-10">
-          <div className="font-semibold text-xl bg-gradient-to-b from-orange-300 to-yellow-300 bg-clip-text text-transparent">
-            Price
-          </div>
-          <div className="text-2xl text-white ml-2">{}50 USDC</div>
+        <div className="-mt-4 text-white text-2xl font-semibold">
+          Treasury chest
         </div>
-      </div>
-      <div className="flex flex-col justify-center items-center">
-        <div>
-          <span className="font-semibold bg-gradient-to-b from-orange-300 to-yellow-300 bg-clip-text text-transparent">
-            Chests:
-          </span>{" "}
-          <span className="text-white ">{Number(data)}</span>
+        <div className="text-gray-400 mt-1">
+          Discover exclusive NFT guardians
         </div>
-        <Button
-          colorScheme="pink"
-          size="lg"
-          className="mt-4 w-32"
-          isLoading={isLoadingOpen}
-          onClick={handleOpen}
-        >
-          Open
-        </Button>
-        <Button
-          colorScheme="pink"
-          size="lg"
-          className="w-32 mt-4"
-          isLoading={isLoadingClaim}
-          onClick={handleClaim}
-        >
-          Claim NFTs
-        </Button>
-        <Button
-          colorScheme="pink"
-          size="lg"
-          className="w-32 mt-4"
-          isLoading={isLoadingBuy}
-          onClick={handleBuy}
-        >
-          Buy
-        </Button>
+        <Badge className="mt-4" variant="subtle" colorScheme="purple">
+          {nChests > 0 ? "Owned: " + nChests : "New"}
+        </Badge>
+        {nChests > 0 ? (
+          <Button
+            colorScheme="pink"
+            className="mt-4 w-full"
+            isLoading={isLoadingOpen}
+            onClick={handleOpen}
+          >
+            Open chest
+          </Button>
+        ) : (
+          <Button
+            colorScheme="pink"
+            className="w-full mt-4"
+            isLoading={isLoadingBuy}
+            onClick={handleBuy}
+          >
+            Purchase for 50 USDC
+          </Button>
+        )}
       </div>
     </div>
   );

@@ -12,7 +12,7 @@ import { floatToBigInt } from "@/lib/bigIntegers";
 import { useAccount } from "wagmi";
 import { useDeployment } from "@/context/deploymentContext";
 
-export const MintButton = ({ amount = 1000000 }) => {
+export const MintButton = () => {
   const [txStatus, setTxStatus] = useState("idle");
   const toast = useToast();
   const { address, isConnecting, isDisconnected } = useAccount();
@@ -27,7 +27,6 @@ export const MintButton = ({ amount = 1000000 }) => {
     address: deployment.usdc,
     abi: USDC_ABI,
     functionName: "mint",
-    args: [address, floatToBigInt(amount)],
   });
 
   const { data, error, isError, write } = useContractWrite({
@@ -43,7 +42,7 @@ export const MintButton = ({ amount = 1000000 }) => {
       setTxStatus("success");
       toast({
         title: "Minted",
-        description: "Successfully minted 1.000.000 Test USDC!",
+        description: "Successfully minted 5.000 Test USDC!",
         status: "success",
         duration: 7000,
         isClosable: true,

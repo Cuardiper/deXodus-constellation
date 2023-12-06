@@ -7,7 +7,7 @@ export function useMarket() {
 }
 
 export function MarketProvider({ children }) {
-  const [market, setMarket] = useState(1); //default BTC
+  const [market, setMarket] = useState(2); //default BTC
 
   const setMarketData = (newMarket) => {
     setMarket(newMarket);

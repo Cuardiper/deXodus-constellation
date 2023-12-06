@@ -20,7 +20,6 @@ export async function mintBatch(address, deployment) {
 
     // Wait for the transaction to be mined
     const response = await tx.wait();
-    console.log("mint completed", response);
   } catch (error) {
     // Handle error
     console.error("Error:", error);

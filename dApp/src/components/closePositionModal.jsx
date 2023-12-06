@@ -21,6 +21,8 @@ import {
 import { ClosePositionButton } from "./tradingComponents/closePositionButton";
 import { useState, useEffect } from "react";
 import { RadioCard } from "./radioCards";
+import { ClosePositionButtonV2 } from "./tradingComponents/closePositionButtonV2";
+import { useNetwork } from "wagmi";
 
 export const ClosePositionModal = ({
   isOpen,
@@ -36,6 +38,7 @@ export const ClosePositionModal = ({
     onChange: (value) => setSizeToClose((position.size * value) / 100),
   });
   const group = getRootProps();
+  const { chain } = useNetwork();
 
   useEffect(() => {
     setSizeToClose(0);
@@ -45,7 +48,7 @@ export const ClosePositionModal = ({
     if (sizeToClose > position.size) {
       setSizeToClose(position.size);
     }
-  }, [sizeToClose]);
+  }, [sizeToClose, position.size]);
 
   // Check radio button value when user types in input
   useEffect(() => {
@@ -53,7 +56,7 @@ export const ClosePositionModal = ({
     if (percent != value) {
       setValue(percent);
     }
-  }, [sizeToClose]);
+  }, [value, sizeToClose, position.size, setValue]);
 
   return (
     <>
@@ -141,13 +144,22 @@ export const ClosePositionModal = ({
           </ModalBody>
           <ModalFooter className="bg-[#0d1116]">
             <Center className="w-full">
-              <ClosePositionButton
-                marketId={position.marketId}
-                sizeToClose={sizeToClose}
-                totalSize={position.size}
-                marketPrice={marketPrice}
-                onSuccess={() => onClose()}
-              />
+              {chain.id == "421614" ? (
+                <ClosePositionButtonV2
+                  marketId={position.marketId}
+                  sizeToClose={sizeToClose}
+                  totalSize={position.size}
+                  onSuccess={() => onClose()}
+                />
+              ) : (
+                <ClosePositionButton
+                  marketId={position.marketId}
+                  sizeToClose={sizeToClose}
+                  totalSize={position.size}
+                  marketPrice={marketPrice}
+                  onSuccess={() => onClose()}
+                />
+              )}
             </Center>
           </ModalFooter>
         </ModalContent>

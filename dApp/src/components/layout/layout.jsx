@@ -19,12 +19,12 @@ export default function Layout({ children, ...props }) {
   const { getDeploymentAddress, setDeploymentData } = useDeployment();
   const { getPriceByMarket } = usePrice();
   const price = getPriceByMarket(market);
-  const { chain, chains } = useNetwork();
+  const { chain } = useNetwork();
 
   //Load deployment context
   useEffect(() => {
     let deployment;
-    if (!chain || chain.id == "11155111") {
+    if (!chain || chain.id == "421614") {
       //Sepolia network id
       deployment = {
         futures: process.env.NEXT_PUBLIC_SEPOLIA_FUTURES_ADDRESS,
@@ -52,30 +52,30 @@ export default function Layout({ children, ...props }) {
   const futuresAddress = getDeploymentAddress("futures");
 
   if (ethIsLoading1inch || btcIsLoading1inch || !price || !futuresAddress) {
-    console.log("loading");
     return (
-      <div className="w-full flex justify-center items-center h-screen bg-[#0d1116]">
+      <>
         <Navbar />
-        <Spinner
-          size="xl"
-          colorScheme="pink"
-          thickness="4px"
-          emptyColor="gray.800"
-          color="teal.500"
-        />
-      </div>
+        <div className="w-full flex justify-center items-center h-screen bg-[#0d1116]">
+          <Spinner
+            size="xl"
+            colorScheme="pink"
+            thickness="4px"
+            emptyColor="gray.800"
+            color="teal.500"
+          />
+        </div>
+      </>
     );
   } else {
     return (
       <>
         <Navbar />
-        <div className="relative w-full bg-[#0d1116]">
-          <div className="lg:flex">
-            <main className="z-40 flex-auto w-full min-h-screen lg:static lg:max-h-full lg:overflow-visible">
-              {children}
-            </main>
+        <div className="relative w-full min-h-screen bg-[#0d1116]">
+          <div className="flex">
+            <main className="mx-3 z-40 flex-auto w-full lg:overflow-hidden">{children}</main>
           </div>
           <Image
+            alt=""
             className="z-10 opacity-10 object-contain"
             src={backgroundImage}
             layout="fill"
