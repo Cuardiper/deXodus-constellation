@@ -4,13 +4,24 @@
 
 ![cover](img/dexodus_cover.png)
 
-
 ---
 
 DeXodus is the next generation decentralized perpetual exchange for everyone. 
 
+Using a gas manager to pay for our users gas fees, users will no longer be subject to the variability of prices on chain congestion. We will instead establish a fair, estable fee for every transaction so that it proportionally impacts everyone’s performance in the same way. 
+
+Also, we aim to incorporate a substantial amount of gamification features to improve user experience and make the protocol more accessible for everybody. For example, we have an NFT collection that has protocol-related benefits, such as fee yielding and fee reductions. These NFTs, when involved in a transaction can experience, level up, be combined and evolve, increasing their benefits along the way. We will also have rankings and seasonal leagues so that they can compete with other traders in the platform to see who has what it takes to make it to the very top.
+
+Last but not least, from the very beginning, we have developed a subgraph so that users can easily query all transactions done on the website to set up their own open-source copy-trading strategy which eventually we will roll-out as an integrated feature of our application.
+
 ---
-[Important Links](#important-links)
+[Important Links](#important-links) •
+[Project Overview](#project-overview) •
+[Deployed Contracts](#deployed-contracts) •
+[Tech Stack](#tech-stack) •
+[Liquidity Pool](#liquidity-pool) •
+[Perpetual Trading](#perpetual-trading) •
+[NFT Gamification](#nft-gamification) 
 
 ---
 
@@ -18,7 +29,7 @@ DeXodus is the next generation decentralized perpetual exchange for everyone.
 
 ## Important Links
 
-- [MVP Website](https://dexodus.vercel.app/)
+- [MVP Website](https://dexodus-constellation.vercel.app/)
 
 ## Project Overview
 
@@ -33,50 +44,15 @@ Our roadmap reflects our commitment to continuous improvement, emphasizing the e
 
 ## Deployed Contracts
 
-#### ZKSync Era
+### Arbitrum Sepolia
 |Contract                      |Address                                          |
 |------------------------------|-------------------------------------------------|
-|LiquidityPool                 |[0x2Db1578266C1fF74e1d3ba82051d97BDC1a3D342](https://zksync2-testnet.zkscan.io/address/0x2Db1578266C1fF74e1d3ba82051d97BDC1a3D342/transactions)    |
-|Futures                       |[0x25689D5a6ba0274C2B160400Fb8BF78AA5FF8677](https://zksync2-testnet.zkscan.io/address/0x25689D5a6ba0274C2B160400Fb8BF78AA5FF8677/transactions)    |
-|EXD                           |[0xc7Cfb58925C4454010D20aBC40AB19a3B6EdB59d](https://zksync2-testnet.zkscan.io/address/0xc7Cfb58925C4454010D20aBC40AB19a3B6EdB59d/transactions)    |
-|MockUSDC                      |[0xd8b8E8530a3DAA309886fcCF80761Fe81e2dF4d0](https://zksync2-testnet.zkscan.io/address/0xd8b8E8530a3DAA309886fcCF80761Fe81e2dF4d0/transactions)    |
-|Chest                         |[0x19a1e1A411539fa2e7b1f4988e9f6A8F62307B33](https://zksync2-testnet.zkscan.io/address/0x19a1e1A411539fa2e7b1f4988e9f6A8F62307B33/transactions)    |
-|Guardians                     |[0xe3CB645a3b550dbAB7C3f6fb92600DcC56F64581](https://zksync2-testnet.zkscan.io/address/0xe3CB645a3b550dbAB7C3f6fb92600DcC56F64581/transactions)    |
-|PriceFeed                     |[0xC325172aa7237F332843adC575AbF11A36081Ba6](https://zksync2-testnet.zkscan.io/address/0xC325172aa7237F332843adC575AbF11A36081Ba6/transactions)    |
-|Paymasters                    |[0x1AE6569a8Aa548ab994e7567D6410C047E2530c9](https://zksync2-testnet.zkscan.io/address/0x1AE6569a8Aa548ab994e7567D6410C047E2530c9/transactions)    |
-
-#### ETH Sepolia
-|Contract                      |Address                                          |
-|------------------------------|-------------------------------------------------|
-|LiquidityPool                 |[0x5D9f08d5b65662a53E30C4E510968AcC6d015651](https://sepolia.etherscan.io/address/0x5D9f08d5b65662a53E30C4E510968AcC6d015651)  |
-|Futures                       |[0x0d1cC1c963CdE4DF833bFCa7898D8dfEd713CF44](https://sepolia.etherscan.io/address/0x0d1cC1c963CdE4DF833bFCa7898D8dfEd713CF44)  |
-|EXD                           |[0xaf2aa7917250689Df2692d3249d94292F30491F8](https://sepolia.etherscan.io/address/0xaf2aa7917250689Df2692d3249d94292F30491F8)  |
-|MockUSDC                      |[0x13D0A4EBeAfCaFB6C84AE35753C04FBF3Eb3663F](https://sepolia.etherscan.io/address/0x13D0A4EBeAfCaFB6C84AE35753C04FBF3Eb3663F)  |
-|Chest                         |[0x9Baca60f3Bd0A5376631cf4Bf9b5A807B99A10B0](https://sepolia.etherscan.io/address/0x9Baca60f3Bd0A5376631cf4Bf9b5A807B99A10B0)  |
-|Guardians                     |[0xFa62AF99ee54B75Fc0Fddce81DC9607ebd4cC986](https://sepolia.etherscan.io/address/0xFa62AF99ee54B75Fc0Fddce81DC9607ebd4cC986)  |
-|RandomNumbers                 |[0xE0Be7fE3Bab804B5F4CA9308C996C16569Df62D0](https://sepolia.etherscan.io/address/0xE0Be7fE3Bab804B5F4CA9308C996C16569Df62D0)  |
-|PriceFeed                     |[0x7d2A50F28D5c200b55B7cbB1c2E1c8cE1E74b255](https://sepolia.etherscan.io/address/0x7d2A50F28D5c200b55B7cbB1c2E1c8cE1E74b255)  |
-
-#### Celo Testnet
-|Contract                      |Address                                          |
-|------------------------------|-------------------------------------------------|
-|LiquidityPool                 |0xC99184157E59A9D44Dd3B67bb7AB34b22a274b25  |
-|Futures                       |0x76e1885CD1ED6373C321cb78cfBeF2b211816D89  |
-|EXD                           |0x69cA9969f85984A1dde224dB43b033e07C223A57  |
-|MockUSDC                      |0xdDaC33b8A13Dbc55B3e346B10193408b6cF5a5Da  |
-|PriceFeed                     |0x399D9FD8B6deB6435b9ef0903FA7D2b0071DFf2b  |
-
-
-#### Celo Testnet
-|Contract                      |Address                                          |
-|------------------------------|-------------------------------------------------|
-|LiquidityPool                 |[0xC99184157E59A9D44Dd3B67bb7AB34b22a274b25](https://alfajores.celoscan.io/address/0xC99184157E59A9D44Dd3B67bb7AB34b22a274b25)  |
-|Futures                       |[0x76e1885CD1ED6373C321cb78cfBeF2b211816D89](https://alfajores.celoscan.io/address/0x76e1885CD1ED6373C321cb78cfBeF2b211816D89)  |
-|EXD                           |[0x69cA9969f85984A1dde224dB43b033e07C223A57](https://alfajores.celoscan.io/address/0x69cA9969f85984A1dde224dB43b033e07C223A57)  |
-|MockUSDC                      |[0xdDaC33b8A13Dbc55B3e346B10193408b6cF5a5Da](https://alfajores.celoscan.io/address/0xdDaC33b8A13Dbc55B3e346B10193408b6cF5a5Da)  |
-|PriceFeed                     |[0x399D9FD8B6deB6435b9ef0903FA7D2b0071DFf2b](https://alfajores.celoscan.io/address/0x399D9FD8B6deB6435b9ef0903FA7D2b0071DFf2b)  |
-
-
+|LiquidityPool                 |[0x1A01ED58476bE8dEc88686F0B237C8e0F1e87c8c](https://sepolia.arbiscan.io/address/0x1A01ED58476bE8dEc88686F0B237C8e0F1e87c8c)    |
+|Futures                       |[0xFb3A9Bcf1d740C121C93984E19A7EF564410D89b](https://sepolia.arbiscan.io/address/0xFb3A9Bcf1d740C121C93984E19A7EF564410D89b)    |
+|EXD                           |[0x37A183c6DB7BF2FCb9C40a5e2A9Ac0111e99b880](https://sepolia.arbiscan.io/address/0x37A183c6DB7BF2FCb9C40a5e2A9Ac0111e99b880)    |
+|MockUSDC                      |[0xB4229AD6591dE49680704103E5Dc54585b2f2e5A](https://sepolia.arbiscan.io/address/0xB4229AD6591dE49680704103E5Dc54585b2f2e5A)    |
+|Chest                         |[0x1C9Ab26901C59DF63369D069ba2780743bcCb3D6](https://sepolia.arbiscan.io/address/0x1C9Ab26901C59DF63369D069ba2780743bcCb3D6)    |
+|Guardians                     |[0x0d267DdEBF7941F5688c6a9ccAF019eC07fcA349](https://sepolia.arbiscan.io/address/0x0d267DdEBF7941F5688c6a9ccAF019eC07fcA349)    |
 
 ## Tech Stack
 At Dexodus, our innovative approach relies on a tailored tech stack, offering customized futures contracts for enhanced efficiency in gamification features and more. Here's an insight into our technology arsenal:
