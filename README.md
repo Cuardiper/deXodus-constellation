@@ -29,7 +29,7 @@ Last but not least, from the very beginning, we have developed a subgraph so tha
 
 ## Important Links
 
-- [MVP Website](https://dexodus.app/)
+- [MVP Website](https://dexodus-constellation.vercel.app/)
 
 ## Project Overview
 
