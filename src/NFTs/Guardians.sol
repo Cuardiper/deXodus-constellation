@@ -124,9 +124,8 @@ contract Guardians is ERC1155, Ownable {
 
     function mintBatch(address _to, uint256[] memory _newIds, uint256[] memory _amounts) public {
         _mintBatch(_to, _newIds, _amounts, "");
-        address holder = msg.sender;
         for (uint256 i; i < 3; i++) {
-            holdings[holder].push(_newIds[i]);
+            holdings[_to].push(_newIds[i]);
         }
     }
 

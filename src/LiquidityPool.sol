@@ -1,35 +1,52 @@
 // SPDX-License-Identifier: MIT
-
 pragma solidity 0.8.19;
 
 import {UUPSUpgradeable} from "@openzeppelin/contracts-upgradeable/proxy/utils/UUPSUpgradeable.sol";
 import {Ownable2StepUpgradeable} from "@openzeppelin/contracts-upgradeable/access/Ownable2StepUpgradeable.sol";
-import {SafeERC20, IERC20} from "@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol";
 import {ERC20Upgradeable} from "@openzeppelin/contracts-upgradeable/token/ERC20/ERC20Upgradeable.sol";
+import {SafeERC20, IERC20} from "@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol";
 
-/* MAIN FUNCTIONALITY:
-     - Liquidity providers add liquidity
-     - Liq Providers rmv liquidity
-     - Function with futures access control to send usdc to the user if wining the trade
-     - Is earning rewards from the traders that lose money
-     - Add fee?????
+//import "../lib/hardhat/packages/hardhat-core/console.sol"; //only for debugging
+
+/*
+NEXT ITERATIONS:
+- CORE check
+- APPLY GOVERNANCE check
+- SET FEES
+- UPGRADEABLE
+- EVENTS
 */
 
-contract LiquidityPool is UUPSUpgradeable, ERC20Upgradeable, Ownable2StepUpgradeable {
+contract LiquidityPool is
+    UUPSUpgradeable,
+    ERC20Upgradeable,
+    Ownable2StepUpgradeable
+{
     using SafeERC20 for IERC20;
 
-    error LiquidityPool__InsufficientAvailableLiquidity(uint256 available, uint256 required);
-
-    uint256 public blockedAmount;
-    address public futuresContract;
+    error LiquidityPool__InsufficientAvailableLiquidity(
+        uint256 available,
+        uint256 required
+    );
 
     IERC20 public USDC;
+
+    uint256 public blockedAmount; // see if it is more efficient use an available variable, compare.
+    address public futuresContract;
+    address public governance;
+    uint256 public protocolFee;
+
+    modifier onlyGov() {
+        require(msg.sender == governance);
+        _;
+    }
 
     modifier onlyFutures() {
         require(msg.sender == futuresContract);
         _;
     }
 
+    /// @custom:oz-upgrades-unsafe-allow constructor
     constructor() {
         _disableInitializers();
     }
@@ -48,21 +65,62 @@ contract LiquidityPool is UUPSUpgradeable, ERC20Upgradeable, Ownable2StepUpgrade
         futuresContract = _futuresContract;
     }
 
-    function addLiquidity(address _to, uint256 _amountIn) external {
-        uint256 lpAmountOut = calcLpOut(_amountIn);
-        USDC.transferFrom(msg.sender, address(this), _amountIn);
-        _mint(_to, lpAmountOut);
+    function setGovernance(address _governance) external onlyGov {
+        governance = _governance;
     }
 
-    // see if there's any liquidity blocked
-    function withdrawLiquidity(address _to, uint256 _amount) external {
-        uint256 liquidityOut = calcUsdcOut(_amount);
-        _burn(msg.sender, _amount);
-        USDC.safeTransfer(_to, liquidityOut);
+    function setProtocolFee(uint256 _protocolFee) external onlyGov {
+        protocolFee = _protocolFee;
     }
 
-    // access control to the futures contract
-    function blockLiquidity(uint256 _amount) external {
+    function setFuturesContract(address _futuresContract) external onlyGov {
+        futuresContract = _futuresContract;
+    }
+
+    function addLiquidity(address to, uint256 amount) external {
+        // calculate lp amount
+        uint256 lpAmountOut = calcLpOut(amount);
+
+        // transfer usdc to the LP
+        USDC.transferFrom(msg.sender, address(this), amount);
+
+        // transfer lp token to the user
+        _mint(to, lpAmountOut);
+    }
+
+    /* Do we need a function to block transfers??
+    function transfer() external {
+        revert();
+    } */
+
+    function withdrawLiquidity(address to, uint256 amount) external {
+        // calc share
+        uint256 liquidityOut = calcUsdcOut(amount);
+
+        uint256 available = availableLiquidity();
+
+        if (liquidityOut > available)
+            revert LiquidityPool__InsufficientAvailableLiquidity({
+                available: available,
+                required: amount
+            });
+
+        // burn lp
+        _burn(msg.sender, amount);
+
+        // transfer liq
+        USDC.safeTransfer(to, liquidityOut);
+    }
+
+    function benefitsToTrader(
+        address _to,
+        uint256 _amount
+    ) external onlyFutures {
+        // USDC.safeApprove(_to, _amount);
+        USDC.safeTransfer(_to, _amount);
+    }
+
+    function blockLiquidity(uint256 _amount) external onlyFutures {
         uint256 available = availableLiquidity();
         if (_amount > available)
             revert LiquidityPool__InsufficientAvailableLiquidity({
@@ -72,26 +130,17 @@ contract LiquidityPool is UUPSUpgradeable, ERC20Upgradeable, Ownable2StepUpgrade
         blockedAmount += _amount;
     }
 
-    // only futures
-    function unblockLiquidity(uint256 _amount) external {
+    function unblockLiquidity(uint256 _amount) external onlyFutures {
         if (blockedAmount < _amount) _amount = blockedAmount;
         blockedAmount -= _amount;
     }
 
-
-    //////////////////////////////////////////
     // HELPERS
-    //////////////////////////////////////////
 
-    function calcLpOut(uint256 amountIn) public returns (uint256 lpOut) {
-        if (totalSupply() == 0) {
-            lpOut = (amountIn * 10 * 1e18) / 1e6;
-        } else {
-            uint256 price = (totalSupply() * 1e6) /
-                USDC.balanceOf(address(this));
-            lpOut = (amountIn * price) / 1e6 - 1;
-        }
-        return lpOut;
+    // function claimRewards() external {}
+
+    function availableLiquidity() public view returns (uint256) {
+        return USDC.balanceOf(address(this)) - blockedAmount;
     }
 
     function calcUsdcOut(
@@ -100,20 +149,16 @@ contract LiquidityPool is UUPSUpgradeable, ERC20Upgradeable, Ownable2StepUpgrade
         liquidityOut = (USDC.balanceOf(address(this)) * amount) / totalSupply();
     }
 
-    function availableLiquidity() public view returns (uint256) {
-        return USDC.balanceOf(address(this)) - blockedAmount;
+    function calcLpOut(uint256 amountIn) public returns (uint256 lpOut) {
+        if (totalSupply() == 0) {
+            lpOut = (amountIn * 10 * 1e18) / 1e6;
+        } else {
+            uint256 price = (totalSupply() * 1e6) /
+                USDC.balanceOf(address(this));
+            lpOut = (amountIn * price) / 1e6;
+        }
+        return lpOut;
     }
-
-    function benefitsToTrader(
-        address _to,
-        uint256 _amount
-    ) external onlyFutures {
-        USDC.safeTransfer(_to, _amount);
-    }
-
-    //////////////////////////////////////////
-    // UPGRADABILITY
-    //////////////////////////////////////////
 
     function version() external pure returns (uint256) {
         return 1;

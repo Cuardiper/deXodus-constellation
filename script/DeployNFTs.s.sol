@@ -4,7 +4,7 @@ pragma solidity 0.8.19;
 
 import {Script} from "forge-std/Script.sol";
 import {HelperConfig} from "./HelperConfig.s.sol";
-import {MockUSDC} from "../src/mocks/MockUSDC.sol";
+import {MockToken} from "../src/mocks/MockUSDC.sol";
 import {EXD} from "../src/EXD.sol";
 import {Guardians} from "../src/NFTS/Guardians.sol";
 import {Chest} from "../src/NFTS/Chest.sol";
@@ -19,8 +19,8 @@ contract DeployNFTs is Script {
 
         vm.startBroadcast(vm.envUint("PRIVATE_KEY"));
 
-        address mockUsdcAddr = address(0x13D0A4EBeAfCaFB6C84AE35753C04FBF3Eb3663F);
-        address exdAddr = address(0xaf2aa7917250689Df2692d3249d94292F30491F8);
+        address mockUsdcAddr = address(0xB4229AD6591dE49680704103E5Dc54585b2f2e5A);
+        address exdAddr = address(0x37A183c6DB7BF2FCb9C40a5e2A9Ac0111e99b880);
 
         guardiansAddr = _deployGuardians();
         chestAddr = _deployChest(exdAddr, mockUsdcAddr, guardiansAddr);

@@ -6,8 +6,11 @@ import {UUPSUpgradeable} from "@openzeppelin/contracts-upgradeable/proxy/utils/U
 import {Ownable2StepUpgradeable} from "@openzeppelin/contracts-upgradeable/access/Ownable2StepUpgradeable.sol";
 import {ERC20Upgradeable} from "@openzeppelin/contracts-upgradeable/token/ERC20/ERC20Upgradeable.sol";
 
-contract MockUSDC is UUPSUpgradeable, Ownable2StepUpgradeable, ERC20Upgradeable {
+contract MockToken is UUPSUpgradeable, Ownable2StepUpgradeable, ERC20Upgradeable {
+    
+    mapping(address => bool) public users;
 
+    /// @custom:oz-upgrades-unsafe-allow constructor
     constructor() {
         _disableInitializers();
     }
@@ -19,11 +22,14 @@ contract MockUSDC is UUPSUpgradeable, Ownable2StepUpgradeable, ERC20Upgradeable 
 
         _transferOwnership(msg.sender);
 
-        _mint(msg.sender, 10_000_000e6);
+        _mint(msg.sender, 1_000_000_000e6);
     }
 
-    function mint(address _to, uint256 _amount) public {
-        _mint(_to, _amount);
+    function mint() public {
+        address user = msg.sender;
+        require(!users[user]);
+        _mint(user, 5_000e6);
+        users[user] = true;
     }
 
     function decimals() public view override returns (uint8) {
@@ -36,7 +42,10 @@ contract MockUSDC is UUPSUpgradeable, Ownable2StepUpgradeable, ERC20Upgradeable 
 
     function _authorizeUpgrade(address newImplementation) internal virtual override onlyOwner {}
 
+    /**
+     * @dev This empty reserved space is put in place to allow future versions to add new
+     * variables without shifting down storage in the inheritance chain.
+     * See https://docs.openzeppelin.com/contracts/4.x/upgradeable#storage_gaps
+     */
     uint256[50] private __gap;
-
-
 }

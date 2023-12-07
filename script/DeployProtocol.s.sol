@@ -6,7 +6,7 @@ import {Script} from "forge-std/Script.sol";
 import {HelperConfig} from "./HelperConfig.s.sol";
 import {Futures} from "../src/Futures.sol";
 import {LiquidityPool} from "../src/LiquidityPool.sol";
-import {MockUSDC} from "../src/mocks/MockUSDC.sol";
+import {MockToken} from "../src/mocks/MockUSDC.sol";
 import {EXD} from "../src/EXD.sol";
 import {PriceFeed} from "../src/PriceFeed.sol";
 import {ERC1967Proxy} from "@openzeppelin/contracts/proxy/ERC1967/ERC1967Proxy.sol";
@@ -24,7 +24,7 @@ contract DeployProtocol is Script {
     address wbtcUsdPriceFeed;
 
     function run() external returns (
-        address futuresAddr,
+        address payable futuresAddr,
         address liquidityPoolAddr,
         address mockUsdcAddr,
         HelperConfig helperConfig,
@@ -39,7 +39,7 @@ contract DeployProtocol is Script {
 
         vm.startBroadcast(deployerKey);
 
-        futuresAddr = _deployFutures();
+        // futuresAddr = payable(_deployFutures());
         liquidityPoolAddr = _deployLiquidityPool();
         mockUsdcAddr = _deployMockUSDC();
         exdAddr = _deployEXD();
@@ -58,7 +58,16 @@ contract DeployProtocol is Script {
             weth
         );
 
+        MockToken(mockUsdcAddr).initialize("Mock USDC", "mUSDC");
+
         EXD(exdAddr).initialize("deXodus Exchange", "EXD");
+
+        futuresAddr = payable(address(new Futures(liquidityPoolAddr,
+            priceFeedAddr,
+            mockUsdcAddr,
+            weth,
+            wbtc,
+            10005)));
 
         // LIQUIDITY POOL INITIALIZATION
         LiquidityPool(liquidityPoolAddr).initialize(
@@ -68,15 +77,24 @@ contract DeployProtocol is Script {
             futuresAddr
         );
 
-        // FUTURES INITIALIZATION
-        Futures(futuresAddr).initialize(
-            liquidityPoolAddr,
-            priceFeedAddr,
-            mockUsdcAddr,
-            weth,
-            wbtc,
-            10005
-        );
+        // address payable verifier = payable(address(0x2ff010DEbC1297f19579B4246cad07bd24F2488A));
+        // string[] memory feedsHex = new string[](2);
+        // feedsHex[0] = "0x00020ffa644e6c585a5bec0e25ca476b9538198259e22b6240957720dcba0e14";
+        // feedsHex[1] = "0x00027bbaff688c906a3e20a34fe951715d1018d262a5b66e38eda027a674cd1b";
+        // address linkToken = address(0xb1D4538B4571d411F07960EF2838Ce337FE1E80E);
+
+        // // FUTURES INITIALIZATION
+        // Futures(futuresAddr).initialize(
+        //     liquidityPoolAddr,
+        //     priceFeedAddr,
+        //     mockUsdcAddr,
+        //     weth,
+        //     wbtc,
+        //     10005
+        //     // verifier,
+        //     // feedsHex,
+        //     // linkToken
+        // );
 
         Futures(futuresAddr).createFuture("WBTC:USDC");
         Futures(futuresAddr).createFuture("WETH:USDC");
@@ -93,12 +111,12 @@ contract DeployProtocol is Script {
         );
     }
 
-    function _deployFutures() internal returns (address) {
-        Futures futures = new Futures();
-        bytes memory bytess;
-        ERC1967Proxy futuresProxy = new ERC1967Proxy(address(futures), bytess);
-        return address(futuresProxy);
-    }
+    // function _deployFutures() internal returns (address) {
+    //     Futures futures = new Futures();
+    //     bytes memory bytess;
+    //     ERC1967Proxy futuresProxy = new ERC1967Proxy(address(futures), bytess);
+    //     return address(futuresProxy);
+    // }
 
     function _deployLiquidityPool() internal returns (address) {
         LiquidityPool liquidityPool = new LiquidityPool();
@@ -111,7 +129,7 @@ contract DeployProtocol is Script {
     }
 
     function _deployMockUSDC() internal returns (address) {
-        MockUSDC mockUSDC = new MockUSDC();
+        MockToken mockUSDC = new MockToken();
         ERC1967Proxy mockUSDCProxy = new ERC1967Proxy(
             address(mockUSDC),
             ""
