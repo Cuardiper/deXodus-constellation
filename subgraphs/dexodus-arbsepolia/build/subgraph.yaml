@@ -1,0 +1,49 @@
+specVersion: 0.0.5
+schema:
+  file: schema.graphql
+dataSources:
+  - kind: ethereum
+    name: Futures
+    network: arbitrum-sepolia
+    source:
+      address: "0xFb3A9Bcf1d740C121C93984E19A7EF564410D89b"
+      abi: Futures
+      startBlock: 2164168
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.7
+      language: wasm/assemblyscript
+      entities:
+        - ClosePosition
+        - DecreaseCollateral
+        - DecreasePosition
+        - IncreaseCollateral
+        - IncreasePosition
+        - LiquidatePosition
+        - OpenPosition
+      abis:
+        - name: Futures
+          file: Futures\abis\Futures.json
+      eventHandlers:
+        - event: ClosePosition(indexed uint256,indexed uint256,indexed
+            address,uint256,uint256,uint256,uint256,uint256,bool,uint256)
+          handler: handleClosePosition
+        - event: DecreaseCollateral(indexed uint256,indexed uint256,indexed
+            address,uint256,uint256,uint256,uint256,uint256,bool,uint256)
+          handler: handleDecreaseCollateral
+        - event: DecreasePosition(indexed uint256,indexed uint256,indexed
+            address,uint256,uint256,uint256,uint256,uint256,bool,uint256)
+          handler: handleDecreasePosition
+        - event: IncreaseCollateral(indexed uint256,indexed uint256,indexed
+            address,uint256,uint256,uint256,uint256,uint256,bool,uint256)
+          handler: handleIncreaseCollateral
+        - event: IncreasePosition(indexed uint256,indexed uint256,indexed
+            address,uint256,uint256,uint256,uint256,uint256,bool,uint256)
+          handler: handleIncreasePosition
+        - event: LiquidatePosition(indexed uint256,indexed uint256,indexed
+            address,uint256,uint256,uint256,uint256,uint256,bool,uint256)
+          handler: handleLiquidatePosition
+        - event: OpenPosition(indexed uint256,indexed uint256,indexed
+            address,uint256,uint256,uint256,uint256,uint256,bool,uint256)
+          handler: handleOpenPosition
+      file: Futures\Futures.wasm
