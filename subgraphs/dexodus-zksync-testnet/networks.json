@@ -1,8 +1,0 @@
-{
-  "zksync-era-testnet": {
-    "Futures": {
-      "address": "0x2Db1578266C1fF74e1d3ba82051d97BDC1a3D342",
-      "startBlock": 13688537
-    }
-  }
-}

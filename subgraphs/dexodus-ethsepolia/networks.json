@@ -1,8 +1,0 @@
-{
-  "sepolia": {
-    "Futures": {
-      "address": "0x76e1885CD1ED6373C321cb78cfBeF2b211816D89",
-      "startBlock": 4718964
-    }
-  }
-}
