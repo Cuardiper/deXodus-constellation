@@ -3,7 +3,7 @@ sources:
   - name: ppx-test
     handler:
       graphql:
-        endpoint: https://api.studio.thegraph.com/query/58823/dexodus-zksync-testnet/v0.0.1
+        endpoint: https://api.studio.thegraph.com/query/58823/dexodus-arbsepolia/v0.0.1
 
 documents:
   - ./src/subgraph/test.graphql
