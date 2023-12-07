@@ -7,8 +7,10 @@ import {
 } from "wagmi";
 import { FuturesABI } from "../../../smartContracts/futures";
 import { useToast } from "@chakra-ui/react";
-import { useContractEvent } from "wagmi";
 import { useDeployment } from "@/context/deploymentContext";
+import { useAccount } from "wagmi";
+import { watchEvent } from "@/lib/smartContracts/futures";
+import { useState } from "react";
 
 export const ClosePositionButtonV2 = ({
   marketId,
@@ -17,6 +19,8 @@ export const ClosePositionButtonV2 = ({
   type = "long",
   onSuccess, // Callback function when the transaction is successful (position is closed)
 }) => {
+  const [isLoading, setIsLoading] = useState(false);
+  const { address } = useAccount();
   const toast = useToast();
   const { chain } = useNetwork();
   const { deployment } = useDeployment();
@@ -57,41 +61,81 @@ export const ClosePositionButtonV2 = ({
     },
   });
 
-  const { isLoading, isSuccess } = useWaitForTransaction({
+  const { isSuccess } = useWaitForTransaction({
     hash: data?.hash,
     onSuccess(TxData) {
       toast({
         title: "Request sent",
-        description: "Your position is being closed",
+        description: "Your position will be closed soon",
         status: "info",
         duration: 7000,
         isClosable: true,
       });
-      onSuccess();
     },
   });
 
-  useContractEvent({
-    address: deployment.futures,
-    abi: FuturesABI,
-    eventName: "PriceUpdate",
-    listener(log) {
+  const handleClosePosition = async () => {
+    try {
+      setIsLoading(true);
+      await write();
+      watchEvent("DecreasePosition", handleEventReceived, deployment);
+      watchEvent("ClosePosition", handleEventReceived, deployment);
+    } catch (error) {
+      toast({
+        title: "Unexpected error",
+        description: "Something went wrong",
+        status: "error",
+        duration: 7000,
+        isClosable: true,
+      });
+      console.log(error);
+    }
+  };
+
+  const handleEventReceived = (log, unwatch) => {
+    console.log("ClosePosition", log);
+    if (log[0].args.trader == address) {
       toast({
         title: "Position closed",
-        description: "Position closed",
+        description: "Positon closed",
         status: "success",
         duration: 7000,
         isClosable: true,
       });
+      setIsLoading(false);
+      onSuccess();
+      unwatch?.();
+    }
+  };
+
+  /*const unwatch = useContractEvent({
+    address: deployment.futures,
+    abi: FuturesABI,
+    eventName: "PriceUpdate",
+    listener(log) {
+      console.log("PriceUpdate(closePosition)", log);
+      if (log[0].args.trader == address) {
+        toast({
+          title: "Position closed",
+          description: "Your position has been closed",
+          status: "success",
+          duration: 7000,
+          isClosable: true,
+        });
+        unwatch?.();
+      } else {
+        console.log("Position opened by another user");
+      }
     },
   });
+  */
 
   return (
     <>
       <Button
         colorScheme="teal"
         size="lg"
-        onClick={write}
+        onClick={handleClosePosition}
         isLoading={isLoading}
         loadingText="Closing"
         width="100%"

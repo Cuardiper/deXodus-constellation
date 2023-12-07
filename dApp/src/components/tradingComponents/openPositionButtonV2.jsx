@@ -4,13 +4,17 @@ import { useToast } from "@chakra-ui/react";
 import { usePrice } from "@/context/priceContext";
 import { useErc20Allowance } from "@/hooks/useErc20Allowance";
 import { approve } from "@/lib/smartContracts/erc20Functions";
-import { increasePositionV2 } from "@/lib/smartContracts/futures";
+import { increasePositionV2, watchEvent } from "@/lib/smartContracts/futures";
 import { useMarket } from "@/context/marketContext";
 import { useDeployment } from "@/context/deploymentContext";
-import { useContractEvent } from 'wagmi'
-import { FuturesABI } from "../../../smartContracts/futures";
+import { useAccount } from "wagmi";
 
-export const OpenPositionButtonV2 = ({ collateral, leverage, type = "long" }) => {
+export const OpenPositionButtonV2 = ({
+  collateral,
+  leverage,
+  type = "long",
+}) => {
+  const { address } = useAccount();
   const { market } = useMarket();
   const [isLoading, setIsLoading] = useState(false);
   const toast = useToast();
@@ -37,16 +41,17 @@ export const OpenPositionButtonV2 = ({ collateral, leverage, type = "long" }) =>
         market,
         size,
         collateral,
-        deployment.futures,
+        deployment.futures
       );
       toast({
         title: "Request sent",
         description: "Your position will be opened soon",
-        status: "success",
+        status: "info",
         duration: 7000,
         isClosable: true,
       });
-      setIsLoading(false);
+      watchEvent("IncreasePosition", handleEventReceived, deployment);
+      watchEvent("OpenPosition", handleEventReceived, deployment);
     } catch (error) {
       toast({
         title: "Unexpected error",
@@ -60,11 +65,9 @@ export const OpenPositionButtonV2 = ({ collateral, leverage, type = "long" }) =>
     }
   };
 
-  useContractEvent({
-    address: deployment.futures,
-    abi: FuturesABI,
-    eventName: 'PriceUpdate',
-    listener(log) {
+  const handleEventReceived = (log, unwatch) => {
+    console.log("IncreasePosition", log);
+    if (log[0].args.trader == address) {
       toast({
         title: "Position opened",
         description: "Position opened",
@@ -72,8 +75,29 @@ export const OpenPositionButtonV2 = ({ collateral, leverage, type = "long" }) =>
         duration: 7000,
         isClosable: true,
       });
+      setIsLoading(false);
+      unwatch?.();
+    }
+  };
+
+  /*useContractEvent({
+    address: deployment.futures,
+    abi: FuturesABI,
+    eventName: "IncreasePosition",
+    listener(log) {
+      console.log("IncreasePosition", log);
+      if (log[0].args.trader == address) {
+        toast({
+          title: "Position opened",
+          description: "Position opened",
+          status: "success",
+          duration: 7000,
+          isClosable: true,
+        });
+        setIsLoading(false);
+      }
     },
-  })
+  });*/
 
   return (
     <Button

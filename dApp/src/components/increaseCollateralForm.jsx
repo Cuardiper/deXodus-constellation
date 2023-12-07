@@ -56,7 +56,6 @@ export const IncreaseCollateralForm = ({ position, marketPrice, closeModal }) =>
             marketId={position.marketId}
             newCollateral={newCollateral}
             totalSize={position.size}
-            marketPrice={marketPrice}
             onSuccess={() => closeModal()}
           />
         ) : (

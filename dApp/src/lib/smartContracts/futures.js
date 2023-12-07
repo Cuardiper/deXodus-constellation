@@ -2,6 +2,7 @@ import {
   prepareWriteContract,
   writeContract,
   waitForTransaction,
+  watchContractEvent,
 } from "@wagmi/core";
 
 import { FuturesABI } from "../../../smartContracts/futures";
@@ -109,7 +110,7 @@ export async function increaseCollateralV2(
       marketId,
       floatToBigInt(newCollateral),
       isLong,
-      "0x00027bbaff688c906a3e20a34fe951715d1018d262a5b66e38eda027a674cd1b"
+      "0x00027bbaff688c906a3e20a34fe951715d1018d262a5b66e38eda027a674cd1b",
     ],
     //chainId: chain.id,
   });
@@ -162,7 +163,7 @@ export async function decreaseCollateralV2(
       marketId,
       percentageDecrease,
       isLong,
-      "0x00027bbaff688c906a3e20a34fe951715d1018d262a5b66e38eda027a674cd1b"
+      "0x00027bbaff688c906a3e20a34fe951715d1018d262a5b66e38eda027a674cd1b",
     ],
     //chainId: chain.id,
   });
@@ -172,4 +173,18 @@ export async function decreaseCollateralV2(
   const data = await waitForTransaction({ hash });
 
   return data;
+}
+
+export function watchEvent(eventName, handleEventFn, deployment) {
+  const unwatch = watchContractEvent(
+    {
+      address: deployment.futures,
+      abi: FuturesABI,
+      eventName: eventName,
+    },
+    (log) => {
+      handleEventFn(log, unwatch);
+    }
+  );
+  return unwatch;
 }

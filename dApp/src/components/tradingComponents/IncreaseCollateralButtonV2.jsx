@@ -3,26 +3,22 @@ import { useState } from "react";
 import { useToast } from "@chakra-ui/react";
 import { useErc20Allowance } from "@/hooks/useErc20Allowance";
 import { approve } from "@/lib/smartContracts/erc20Functions";
-import { increaseCollateralV2 } from "@/lib/smartContracts/futures";
+import { increaseCollateralV2, watchEvent } from "@/lib/smartContracts/futures";
 import { useDeployment } from "@/context/deploymentContext";
-import { useContractEvent } from "wagmi";
-import { FuturesABI } from "../../../smartContracts/futures";
+import { useAccount } from "wagmi";
 
 export const IncreaseCollateralButtonV2 = ({
   marketId,
   newCollateral,
-  marketPrice,
   type = "long",
   onSuccess, // Callback function when the transaction is successful (position is closed)
 }) => {
+  const { address } = useAccount();
   const [isLoading, setIsLoading] = useState(false);
   const toast = useToast();
   const { deployment } = useDeployment();
   const { balance: allowance, isLoading: isLoadingAllowance } =
-    useErc20Allowance(
-      deployment.usdc,
-      deployment.futures
-    );
+    useErc20Allowance(deployment.usdc, deployment.futures);
 
   const handleOpenPosition = async () => {
     setIsLoading(true);
@@ -43,12 +39,11 @@ export const IncreaseCollateralButtonV2 = ({
       toast({
         title: "Position edited",
         description: "Your position will be modified",
-        status: "success",
+        status: "info",
         duration: 7000,
         isClosable: true,
       });
-      onSuccess();
-      setIsLoading(false);
+      watchEvent("IncreaseCollateral", handleEventReceived, deployment);
     } catch (error) {
       toast({
         title: "Unexpected error",
@@ -62,20 +57,39 @@ export const IncreaseCollateralButtonV2 = ({
     }
   };
 
-  useContractEvent({
+  const handleEventReceived = (log, unwatch) => {
+    console.log("IncreaseCollateral", log);
+    if (log[0].args.trader == address) {
+      toast({
+        title: "Position edited",
+        description: "The collateral has been increased",
+        status: "success",
+        duration: 7000,
+        isClosable: true,
+      });
+      onSuccess();
+      setIsLoading(false);
+      unwatch?.();
+    }
+  };
+
+  /*const unwatch = useContractEvent({
     address: deployment.futures,
     abi: FuturesABI,
     eventName: "PriceUpdate",
     listener(log) {
+      console.log("PriceUpdate", log);
+      unwatch?.();
       toast({
         title: "Position edited",
-        description: "Position edited",
+        description: "Collateral has been increased",
         status: "success",
         duration: 7000,
         isClosable: true,
       });
     },
   });
+  */
 
   return (
     <Button

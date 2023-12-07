@@ -108,7 +108,6 @@ export const DecreaseCollateralForm = ({ position, marketPrice, closeModal }) =>
             marketId={position.marketId}
             sizeToClose={sizeToClose}
             totalSize={position.collateral}
-            marketPrice={marketPrice}
             onSuccess={() => closeModal()}
           />
         ) : (

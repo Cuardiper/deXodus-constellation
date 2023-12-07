@@ -1,10 +1,9 @@
 import { Button } from "@chakra-ui/react";
 import { useState } from "react";
 import { useToast } from "@chakra-ui/react";
-import { decreaseCollateralV2 } from "@/lib/smartContracts/futures";
+import { decreaseCollateralV2, watchEvent } from "@/lib/smartContracts/futures";
 import { useDeployment } from "@/context/deploymentContext";
-import { useContractEvent } from "wagmi";
-import { FuturesABI } from "../../../smartContracts/futures";
+import { useAccount } from "wagmi";
 
 export const DecreaseCollateralButtonV2 = ({
   marketId,
@@ -13,6 +12,7 @@ export const DecreaseCollateralButtonV2 = ({
   type = "long",
   onSuccess, // Callback function when the transaction is successful (position is closed)
 }) => {
+  const { address } = useAccount();
   const [isLoading, setIsLoading] = useState(false);
   const toast = useToast();
   const { deployment } = useDeployment();
@@ -31,12 +31,11 @@ export const DecreaseCollateralButtonV2 = ({
       toast({
         title: "Position edited",
         description: "Your position will be modified",
-        status: "success",
+        status: "info",
         duration: 7000,
         isClosable: true,
       });
-      onSuccess();
-      setIsLoading(false);
+      watchEvent("DecreaseCollateral", handleEventReceived, deployment);
     } catch (error) {
       toast({
         title: "Unexpected error",
@@ -50,20 +49,38 @@ export const DecreaseCollateralButtonV2 = ({
     }
   };
 
-  useContractEvent({
+  const handleEventReceived = (log, unwatch) => {
+    console.log("DecreaseCollateral", log);
+    if (log[0].args.trader == address) {
+      toast({
+        title: "Position edited",
+        description: "The collateral has been decreased",
+        status: "success",
+        duration: 7000,
+        isClosable: true,
+      });
+      onSuccess();
+      setIsLoading(false);
+      unwatch?.();
+    }
+  };
+
+  /*useContractEvent({
     address: deployment.futures,
     abi: FuturesABI,
     eventName: "PriceUpdate",
     listener(log) {
+      console.log("PriceUpdate", log);
+      unwatch?.();
       toast({
         title: "Position edited",
-        description: "Position edited",
+        description: "Collateral has been decreased",
         status: "success",
         duration: 7000,
         isClosable: true,
       });
     },
-  });
+  });*/
 
   return (
     <Button
