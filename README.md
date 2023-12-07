@@ -7,31 +7,14 @@
 
 ---
 
-DeXodus is the next generation decentralized perpetual exchange for everyone. This project was born out of sweat, blood and copious amounts of ayran during the legendary hackathon of ETH Global Istanbul 2023. 
-
-We wanted to thank everyone who helped bring this event together and wish the best of luck to all our competitors who have shared this experience with us. We had an amazing time and we hope you all did as well.
-
-To immortalize the event, we have developed a few unique traits (ETH Global beanie, T-shirt and shish kebab) for our NFT collection that will be airdropped exclusively to the first 40 users that interacts use Dexodus in testnet. We hope you like it and look forward to your feedback!
-
-![istanbul guardian](img/istanbul_guardian.png)
+DeXodus is the next generation decentralized perpetual exchange for everyone. 
 
 ---
-
-[Prize Submissions](#prize-submissions) •
 [Important Links](#important-links)
 
 ---
 
 </div>
-
-## Prize Subsmissions
-- 1Inch: 
-- ZKSync: Best Paymasters on zkSync
-- Filecoin: Grand Prizes
-- Chainlink: Other Chainlink Services
-- API3: Best use of dAPI price feeds and Best use of API3 QRNG
-- TheGraph: Best New Subgraph & Best Use of Subgraph
-
 
 ## Important Links
 
