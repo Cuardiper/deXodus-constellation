@@ -74,12 +74,6 @@ export default function Layout({ children, ...props }) {
           <div className="flex">
             <main className="mx-3 z-40 flex-auto w-full lg:overflow-hidden">{children}</main>
           </div>
-          <Image
-            alt=""
-            className="z-10 opacity-10 object-contain"
-            src={backgroundImage}
-            layout="fill"
-          />
         </div>
       </>
     );
