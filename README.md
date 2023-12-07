@@ -8,9 +8,11 @@
 
 DeXodus is the next generation decentralized perpetual exchange for everyone. 
 
-Using a gas manager to pay for our users gas fees, users will no longer be subject to the variability of prices on chain congestion. We will instead establish a fair, estable fee for every transaction so that it proportionally impacts everyone’s performance in the same way. 
+We are using Chainlink's Data Streams to take to the next level both the security and performance of derivatives trading, along with Chainlink Automations to provide a seamless user experience.
 
-Also, we aim to incorporate a substantial amount of gamification features to improve user experience and make the protocol more accessible for everybody. For example, we have an NFT collection that has protocol-related benefits, such as fee yielding and fee reductions. These NFTs, when involved in a transaction can experience, level up, be combined and evolve, increasing their benefits along the way. We will also have rankings and seasonal leagues so that they can compete with other traders in the platform to see who has what it takes to make it to the very top.
+Also, using a gas manager to pay for our users gas fees, users will no longer be subject to the variability of prices on chain congestion. We will instead establish a fair, estable fee for every transaction so that it proportionally impacts everyone’s performance in the same way. 
+
+Furthermore, we aim to incorporate a substantial amount of gamification features to improve user experience and make the protocol more accessible for everybody. For example, we have an NFT collection that has protocol-related benefits, such as fee yielding and fee reductions. These NFTs, when involved in a transaction can experience, level up, be combined and evolve, increasing their benefits along the way. We will also have rankings and seasonal leagues so that they can compete with other traders in the platform to see who has what it takes to make it to the very top.
 
 Last but not least, from the very beginning, we have developed a subgraph so that users can easily query all transactions done on the website to set up their own open-source copy-trading strategy which eventually we will roll-out as an integrated feature of our application.
 
