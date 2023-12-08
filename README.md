@@ -17,6 +17,7 @@ Furthermore, we aim to incorporate a substantial amount of gamification features
 Last but not least, from the very beginning, we have developed a subgraph so that users can easily query all transactions done on the website to set up their own open-source copy-trading strategy which eventually we will roll-out as an integrated feature of our application.
 
 ---
+[Hackathon Specifications](#hackathon-specifications) •
 [Important Links](#important-links) •
 [Project Overview](#project-overview) •
 [Deployed Contracts](#deployed-contracts) •
@@ -29,8 +30,19 @@ Last but not least, from the very beginning, we have developed a subgraph so tha
 
 </div>
 
+## Hackathon Specifications
+![constellation](img/constellation.png)
+
+We are proud to present this project to the following categories of the Chainlink Constellation Hackathon:
+- Chainlink
+  - DEFI & PAYMENTS
+- The Graph
+  - Best new Subgraph or Substream
+  - Best use of Subgraph or Substream
+
 ## Important Links
 
+- [Video Presentation](https://vimeo.com/892605338?share=copy)
 - [MVP Website](https://dexodus-constellation.vercel.app/)
 
 ## Project Overview
